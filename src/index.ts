@@ -2,7 +2,9 @@ import express, { Request, Response } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import chalk from 'chalk';
 import { config } from './config/app.config';
+import connectToDatabase from './database/mongodb';
 const app = express();
 const BASE_PATH = config.BASE_PATH;
 
@@ -23,6 +25,9 @@ app.get('/', (req: Request, res: Response) => {
 
 app.listen(config.PORT, async () => {
   console.log(
-    `Server is listening on port ${config.PORT} in ${config.NODE_ENV}`,
+    chalk.green.bold(`Backend Boilerplate API is running on:`),
+    chalk.blue.bold.underline(`http://localhost:${config.PORT}`),
+    chalk.green.bold(`in ${config.NODE_ENV.toUpperCase()}`),
   );
+  await connectToDatabase();
 });

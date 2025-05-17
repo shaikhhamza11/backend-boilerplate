@@ -5,6 +5,7 @@ const appConfig = () => ({
   NODE_ENV: getEnv('NODE_ENV', 'development'),
   APP_ORIGIN: getEnv('APP_ORIGIN', 'localhost'),
   BASE_PATH: getEnv('BASE_PATH', '/api/v1'),
+  MONGO_URI: getEnv('MONGO_URI'),
   JWT: {
     JWT_SECRET: getEnv('JWT_SECRET'),
     JWT_EXPIRES_IN: getEnv('JWT_EXPIRES_IN', '15m'),
