@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import chalk from 'chalk';
 import { config } from './config/app.config';
 import connectToDatabase from './database/mongodb';
+import { errorHandler } from './middlewares/errorHandler';
+import { HTTPSTATUS, HttpStatusCode } from './config/http.config';
+
 const app = express();
 const BASE_PATH = config.BASE_PATH;
 
@@ -16,12 +19,14 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use(cookieParser());
 
 app.get('/', (req: Request, res: Response) => {
-  console.log(req.body);
-  res.status(200).json({ message: 'Hello from Backend Boilerplate' });
+  res.status(HTTPSTATUS.OK).json({ message: 'Hello from Backend Boilerplate' });
 });
+
+app.use(errorHandler);
 
 app.listen(config.PORT, async () => {
   console.log(
