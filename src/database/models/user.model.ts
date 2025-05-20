@@ -14,7 +14,7 @@ export interface UserDocument extends Document {
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
-  userPreference: UserPreference;
+  userPreferences: UserPreference;
   comparePassword(value: string): Promise<boolean>;
 }
 
@@ -29,7 +29,7 @@ const userSchema = new Schema<UserDocument>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    userPreference: {
+    userPreferences: {
       type: userPreferencesSchema,
       default: {},
     },
@@ -43,9 +43,7 @@ const userSchema = new Schema<UserDocument>(
 userSchema.set('toJSON', {
   transform: function (doc, ret) {
     delete ret.password;
-    if (ret.userPreferences) {
-      delete ret.userPreferences.twoFactorSecret;
-    }
+    delete ret.userPreferences.twoFactorSecret;
     return ret;
   },
 });

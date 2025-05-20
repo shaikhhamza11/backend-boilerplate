@@ -3,6 +3,10 @@ import { ErrorRequestHandler } from 'express';
 import { HTTPSTATUS } from '../config/http.config';
 import { AppError } from '../common/utils/AppError';
 import { ZodError } from 'zod';
+import {
+  clearAuthenticationCookies,
+  REFRESH_BASE_PATH,
+} from '../common/utils/cookie';
 
 export const errorHandler: ErrorRequestHandler = (
   error,
@@ -15,6 +19,10 @@ export const errorHandler: ErrorRequestHandler = (
     `\nMessage: ${error.message}`,
     `\nStack:\n${error.stack}\n`,
   );
+
+  if (req.path === REFRESH_BASE_PATH) {
+    clearAuthenticationCookies(res);
+  }
 
   if (error instanceof SyntaxError) {
     return res.status(HTTPSTATUS.BAD_REQUEST).json({
@@ -31,7 +39,7 @@ export const errorHandler: ErrorRequestHandler = (
   if (error instanceof ZodError) {
     return res.status(HTTPSTATUS.BAD_REQUEST).json({
       message: 'Validation failed',
-      errors: error.errors.map(err => ({
+      errors: error.issues.map(err => ({
         field: err.path.join('.'),
         message: err.message,
       })),
