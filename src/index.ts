@@ -7,6 +7,7 @@ import { config } from './config/app.config';
 import connectToDatabase from './database/mongodb';
 import { errorHandler } from './middlewares/errorHandler';
 import { HTTPSTATUS, HttpStatusCode } from './config/http.config';
+import authRoute from './modules/auth/auth.routes';
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -23,8 +24,11 @@ app.use(
 app.use(cookieParser());
 
 app.get('/', (req: Request, res: Response) => {
+  console.log(BASE_PATH);
   res.status(HTTPSTATUS.OK).json({ message: 'Hello from Backend Boilerplate' });
 });
+
+app.use(`${BASE_PATH}/auth`, authRoute);
 
 app.use(errorHandler);
 
